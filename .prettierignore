@@ -1,0 +1,10 @@
+node_modules
+coverage
+.vite
+docs/assets
+docs/index.html
+docs/404.html
+docs/favicon.svg
+docs/icons.svg
+docs/site.webmanifest
+docs/sw.js

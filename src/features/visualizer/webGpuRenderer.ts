@@ -1,4 +1,4 @@
-import type { VisualizerEngine } from './visualizerEngine'
+import type { VisualizerEngine } from "./visualizerEngine";
 
 const shader = /* wgsl */ `
 struct VertexOut {
@@ -85,62 +85,72 @@ fn fragmentMain(in: VertexOut) -> @location(0) vec4<f32> {
   color += vec3<f32>(1.0, 0.35, 0.7) * personField * (0.25 + pulse * 0.55);
   return vec4<f32>(color, 1.0);
 }
-`
+`;
 
-export async function createWebGpuRenderer(canvas: HTMLCanvasElement): Promise<VisualizerEngine | undefined> {
-  if (!('gpu' in navigator)) return undefined
-  const adapter = await navigator.gpu.requestAdapter({ powerPreference: 'high-performance' })
-  if (!adapter) return undefined
-  const device = await adapter.requestDevice()
-  const context = canvas.getContext('webgpu')
-  if (!context) return undefined
-  const format = navigator.gpu.getPreferredCanvasFormat()
+export async function createWebGpuRenderer(
+  canvas: HTMLCanvasElement,
+): Promise<VisualizerEngine | undefined> {
+  if (!("gpu" in navigator)) return undefined;
+  const adapter = await navigator.gpu.requestAdapter({
+    powerPreference: "high-performance",
+  });
+  if (!adapter) return undefined;
+  const device = await adapter.requestDevice();
+  const context = canvas.getContext("webgpu");
+  if (!context) return undefined;
+  const format = navigator.gpu.getPreferredCanvasFormat();
   const uniformBuffer = device.createBuffer({
     size: 5 * 4 * Float32Array.BYTES_PER_ELEMENT,
     usage: GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST,
-  })
+  });
   const bindGroupLayout = device.createBindGroupLayout({
     entries: [
       {
         binding: 0,
         visibility: GPUShaderStage.FRAGMENT,
-        buffer: { type: 'uniform' },
+        buffer: { type: "uniform" },
       },
     ],
-  })
+  });
   const bindGroup = device.createBindGroup({
     layout: bindGroupLayout,
     entries: [{ binding: 0, resource: { buffer: uniformBuffer } }],
-  })
+  });
   const pipeline = device.createRenderPipeline({
-    layout: device.createPipelineLayout({ bindGroupLayouts: [bindGroupLayout] }),
-    vertex: { module: device.createShaderModule({ code: shader }), entryPoint: 'vertexMain' },
+    layout: device.createPipelineLayout({
+      bindGroupLayouts: [bindGroupLayout],
+    }),
+    vertex: {
+      module: device.createShaderModule({ code: shader }),
+      entryPoint: "vertexMain",
+    },
     fragment: {
       module: device.createShaderModule({ code: shader }),
-      entryPoint: 'fragmentMain',
+      entryPoint: "fragmentMain",
       targets: [{ format }],
     },
-    primitive: { topology: 'triangle-list' },
-  })
+    primitive: { topology: "triangle-list" },
+  });
 
   const resize = () => {
-    const ratio = window.devicePixelRatio || 1
-    const width = Math.max(1, Math.floor(canvas.clientWidth * ratio))
-    const height = Math.max(1, Math.floor(canvas.clientHeight * ratio))
+    const ratio = window.devicePixelRatio || 1;
+    const width = Math.max(1, Math.floor(canvas.clientWidth * ratio));
+    const height = Math.max(1, Math.floor(canvas.clientHeight * ratio));
     if (canvas.width !== width || canvas.height !== height) {
-      canvas.width = width
-      canvas.height = height
-      context.configure({ device, format, alphaMode: 'opaque' })
+      canvas.width = width;
+      canvas.height = height;
+      context.configure({ device, format, alphaMode: "opaque" });
     }
-  }
+  };
 
-  resize()
+  resize();
 
   return {
-    name: 'WebGPU WGSL',
+    name: "WebGPU WGSL",
     update(frame, now) {
-      resize()
-      const palette = frame.palette === 'prism' ? 0 : frame.palette === 'thermal' ? 1 : 2
+      resize();
+      const palette =
+        frame.palette === "prism" ? 0 : frame.palette === "thermal" ? 1 : 2;
       const values = new Float32Array([
         canvas.width,
         canvas.height,
@@ -162,28 +172,28 @@ export async function createWebGpuRenderer(canvas: HTMLCanvasElement): Promise<V
         frame.sync.remotePulse,
         frame.intensity,
         palette,
-      ])
-      device.queue.writeBuffer(uniformBuffer, 0, values)
-      const encoder = device.createCommandEncoder()
+      ]);
+      device.queue.writeBuffer(uniformBuffer, 0, values);
+      const encoder = device.createCommandEncoder();
       const pass = encoder.beginRenderPass({
         colorAttachments: [
           {
             view: context.getCurrentTexture().createView(),
             clearValue: { r: 0.02, g: 0.02, b: 0.03, a: 1 },
-            loadOp: 'clear',
-            storeOp: 'store',
+            loadOp: "clear",
+            storeOp: "store",
           },
         ],
-      })
-      pass.setPipeline(pipeline)
-      pass.setBindGroup(0, bindGroup)
-      pass.draw(3)
-      pass.end()
-      device.queue.submit([encoder.finish()])
+      });
+      pass.setPipeline(pipeline);
+      pass.setBindGroup(0, bindGroup);
+      pass.draw(3);
+      pass.end();
+      device.queue.submit([encoder.finish()]);
     },
     resize,
     dispose() {
-      device.destroy()
+      device.destroy();
     },
-  }
+  };
 }

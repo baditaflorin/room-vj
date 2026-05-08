@@ -1,4 +1,4 @@
-import type { VisualizerEngine } from './visualizerEngine'
+import type { VisualizerEngine } from "./visualizerEngine";
 
 const fragmentShader = `
 precision highp float;
@@ -29,7 +29,7 @@ void main() {
   color += vec3(1.0, .22, .58) * field * .45;
   gl_FragColor = vec4(color, 1.0);
 }
-`
+`;
 
 const vertexShader = `
 varying vec2 vUv;
@@ -37,14 +37,20 @@ void main() {
   vUv = uv;
   gl_Position = vec4(position.xy, 0.0, 1.0);
 }
-`
+`;
 
-export async function createThreeFallbackRenderer(canvas: HTMLCanvasElement): Promise<VisualizerEngine> {
-  const THREE = await import('three')
-  const renderer = new THREE.WebGLRenderer({ canvas, antialias: false, powerPreference: 'high-performance' })
-  const scene = new THREE.Scene()
-  const camera = new THREE.Camera()
-  const geometry = new THREE.PlaneGeometry(2, 2)
+export async function createThreeFallbackRenderer(
+  canvas: HTMLCanvasElement,
+): Promise<VisualizerEngine> {
+  const THREE = await import("three");
+  const renderer = new THREE.WebGLRenderer({
+    canvas,
+    antialias: false,
+    powerPreference: "high-performance",
+  });
+  const scene = new THREE.Scene();
+  const camera = new THREE.Camera();
+  const geometry = new THREE.PlaneGeometry(2, 2);
   const uniforms = {
     uResolution: { value: new THREE.Vector2(1, 1) },
     uTime: { value: 0 },
@@ -52,56 +58,61 @@ export async function createThreeFallbackRenderer(canvas: HTMLCanvasElement): Pr
     uPerson: { value: new THREE.Vector4() },
     uSurface: { value: new THREE.Vector4() },
     uSync: { value: new THREE.Vector4() },
-  }
+  };
   const material = new THREE.ShaderMaterial({
     uniforms,
     vertexShader,
     fragmentShader,
     depthWrite: false,
     depthTest: false,
-  })
-  scene.add(new THREE.Mesh(geometry, material))
+  });
+  scene.add(new THREE.Mesh(geometry, material));
 
   const resize = () => {
-    const width = Math.max(1, canvas.clientWidth)
-    const height = Math.max(1, canvas.clientHeight)
-    renderer.setPixelRatio(window.devicePixelRatio || 1)
-    renderer.setSize(width, height, false)
-    uniforms.uResolution.value.set(canvas.width, canvas.height)
-  }
-  resize()
+    const width = Math.max(1, canvas.clientWidth);
+    const height = Math.max(1, canvas.clientHeight);
+    renderer.setPixelRatio(window.devicePixelRatio || 1);
+    renderer.setSize(width, height, false);
+    uniforms.uResolution.value.set(canvas.width, canvas.height);
+  };
+  resize();
 
   return {
-    name: 'Three.js WebGL',
+    name: "Three.js WebGL",
     update(frame, now) {
-      resize()
-      uniforms.uTime.value = now / 1000
+      resize();
+      uniforms.uTime.value = now / 1000;
       uniforms.uAudio.value.set(
         frame.audio.rms,
         frame.audio.energy,
         frame.audio.spectralCentroid,
         frame.audio.beatPulse,
-      )
+      );
       uniforms.uPerson.value.set(
         frame.person.centerX,
         frame.person.centerY,
         frame.person.active ? frame.person.radius : 0,
         frame.person.velocity,
-      )
+      );
       uniforms.uSurface.value.set(
         frame.surface.brightness,
         frame.surface.edgeEnergy,
         frame.surface.planeCount,
         frame.sync.peerCount,
-      )
-      uniforms.uSync.value.set(frame.sync.remoteHue, frame.sync.remotePulse, frame.intensity, 0)
-      renderer.render(scene, camera)
+      );
+      uniforms.uSync.value.set(
+        frame.sync.remoteHue,
+        frame.sync.remotePulse,
+        frame.intensity,
+        0,
+      );
+      renderer.render(scene, camera);
     },
     resize,
     dispose() {
-      geometry.dispose()
-      material.dispose()
-      renderer.dispose()
+      geometry.dispose();
+      material.dispose();
+      renderer.dispose();
     },
-  }
+  };
 }

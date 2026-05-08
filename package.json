@@ -6,8 +6,9 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "npm-run-all typecheck build:site copy:404",
+    "build": "npm-run-all typecheck clean:pages build:site copy:404",
     "build:site": "vite build",
+    "clean:pages": "node scripts/clean-pages-build.mjs",
     "copy:404": "node scripts/copy-404.mjs",
     "lint": "eslint .",
     "typecheck": "tsc -b",

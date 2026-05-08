@@ -1,9 +1,12 @@
-import { readSettings, writeSettings, type StoredSettings } from '../../lib/storage'
-import { createDemoAudioFeatures } from '../audio/audioAnalyzer'
-import { createRoomMapper, type RoomMapper } from '../room/roomMapper'
-import type { MeshSync } from '../sync/webrtcMesh'
-import type { VisualizerEngine } from '../visualizer/visualizerEngine'
-import { createDemoPersonFrame } from '../vision/personTracker'
+import {
+  readSettings,
+  writeSettings,
+  type StoredSettings,
+} from "../../lib/storage";
+import { createRoomMapper, type RoomMapper } from "../room/roomMapper";
+import type { MeshSync } from "../sync/webrtcMesh";
+import type { VisualizerEngine } from "../visualizer/visualizerEngine";
+import { createDemoAudioFeatures, createDemoPersonFrame } from "./demoFrames";
 import {
   emptyAudioFeatures,
   emptyPersonFrame,
@@ -14,65 +17,65 @@ import {
   type PersonFrame,
   type RuntimeStatus,
   type SurfaceFrame,
-} from './types'
+} from "./types";
 
 interface RoomSessionOptions {
-  visualCanvas: HTMLCanvasElement
-  overlayCanvas: HTMLCanvasElement
-  video: HTMLVideoElement
-  onStatus(status: RuntimeStatus): void
+  visualCanvas: HTMLCanvasElement;
+  overlayCanvas: HTMLCanvasElement;
+  video: HTMLVideoElement;
+  onStatus(status: RuntimeStatus): void;
 }
 
 export interface RoomSession {
-  startDemo(): Promise<void>
-  startLive(): Promise<void>
-  stop(): void
-  setPalette(palette: PaletteName): void
-  setIntensity(intensity: number): void
-  connectSync(roomCode: string, mode: 'host' | 'join'): Promise<void>
-  disconnectSync(): void
-  getSettings(): StoredSettings
+  startDemo(): Promise<void>;
+  startLive(): Promise<void>;
+  stop(): void;
+  setPalette(palette: PaletteName): void;
+  setIntensity(intensity: number): void;
+  connectSync(roomCode: string, mode: "host" | "join"): Promise<void>;
+  disconnectSync(): void;
+  getSettings(): StoredSettings;
 }
 
 interface AudioAnalyzerRef {
-  start(): Promise<void>
-  stop(): void
-  getFeatures(): AudioFeatures
+  start(): Promise<void>;
+  stop(): void;
+  getFeatures(): AudioFeatures;
 }
 
 interface PersonTrackerRef {
-  status: string
-  detect(video: HTMLVideoElement, now: number): PersonFrame
-  dispose(): void
+  status: string;
+  detect(video: HTMLVideoElement, now: number): PersonFrame;
+  dispose(): void;
 }
 
 export function createRoomSession(options: RoomSessionOptions): RoomSession {
-  const roomMapper: RoomMapper = createRoomMapper(options.overlayCanvas)
-  let settings = readSettings()
-  let visualizer: VisualizerEngine | undefined
-  let mediaStream: MediaStream | undefined
-  let audioAnalyzer: AudioAnalyzerRef | undefined
-  let personTracker: PersonTrackerRef | undefined
-  let sync: MeshSync | undefined
-  let animationFrame = 0
-  let mode: RuntimeStatus['mode'] = 'idle'
-  let renderer = 'not started'
-  let camera: RuntimeStatus['camera'] = 'idle'
-  let microphone: RuntimeStatus['microphone'] = 'idle'
-  let vision = 'idle'
-  let message = 'Ready'
-  let currentAudio = emptyAudioFeatures
-  let currentSurface: SurfaceFrame = emptySurfaceFrame
-  let currentPerson: PersonFrame = emptyPersonFrame
-  let lastStatusAt = 0
-  let lastFrameAt = performance.now()
-  let fps = 0
-  let lastSyncAt = 0
+  const roomMapper: RoomMapper = createRoomMapper(options.overlayCanvas);
+  let settings = readSettings();
+  let visualizer: VisualizerEngine | undefined;
+  let mediaStream: MediaStream | undefined;
+  let audioAnalyzer: AudioAnalyzerRef | undefined;
+  let personTracker: PersonTrackerRef | undefined;
+  let sync: MeshSync | undefined;
+  let animationFrame = 0;
+  let mode: RuntimeStatus["mode"] = "idle";
+  let renderer = "not started";
+  let camera: RuntimeStatus["camera"] = "idle";
+  let microphone: RuntimeStatus["microphone"] = "idle";
+  let vision = "idle";
+  let message = "Ready";
+  let currentAudio = emptyAudioFeatures;
+  let currentSurface: SurfaceFrame = emptySurfaceFrame;
+  let currentPerson: PersonFrame = emptyPersonFrame;
+  let lastStatusAt = 0;
+  let lastFrameAt = performance.now();
+  let fps = 0;
+  let lastSyncAt = 0;
 
   const emit = (force = false) => {
-    const now = performance.now()
-    if (!force && now - lastStatusAt < 220) return
-    lastStatusAt = now
+    const now = performance.now();
+    if (!force && now - lastStatusAt < 220) return;
+    lastStatusAt = now;
     options.onStatus({
       mode,
       renderer,
@@ -85,48 +88,50 @@ export function createRoomSession(options: RoomSessionOptions): RoomSession {
       audio: currentAudio,
       person: currentPerson,
       surface: currentSurface,
-    })
-  }
+    });
+  };
 
   const ensureVisualizer = async () => {
-    if (visualizer) return visualizer
-    const { createVisualizerEngine } = await import('../visualizer/visualizerEngine')
-    visualizer = await createVisualizerEngine(options.visualCanvas)
-    renderer = visualizer.name
-    return visualizer
-  }
+    if (visualizer) return visualizer;
+    const { createVisualizerEngine } =
+      await import("../visualizer/visualizerEngine");
+    visualizer = await createVisualizerEngine(options.visualCanvas);
+    renderer = visualizer.name;
+    return visualizer;
+  };
 
   const stopMedia = () => {
-    audioAnalyzer?.stop()
-    audioAnalyzer = undefined
-    personTracker?.dispose()
-    personTracker = undefined
+    audioAnalyzer?.stop();
+    audioAnalyzer = undefined;
+    personTracker?.dispose();
+    personTracker = undefined;
     if (mediaStream) {
-      for (const track of mediaStream.getTracks()) track.stop()
-      mediaStream = undefined
+      for (const track of mediaStream.getTracks()) track.stop();
+      mediaStream = undefined;
     }
-    options.video.pause()
-    options.video.srcObject = null
-  }
+    options.video.pause();
+    options.video.srcObject = null;
+  };
 
   const tick = (now: number) => {
-    const delta = Math.max(1, now - lastFrameAt)
-    fps = fps === 0 ? 1000 / delta : fps * 0.9 + (1000 / delta) * 0.1
-    lastFrameAt = now
+    const delta = Math.max(1, now - lastFrameAt);
+    fps = fps === 0 ? 1000 / delta : fps * 0.9 + (1000 / delta) * 0.1;
+    lastFrameAt = now;
 
-    if (mode === 'demo') {
-      currentAudio = createDemoAudioFeatures(now)
-      currentPerson = createDemoPersonFrame(now)
-      currentSurface = roomMapper.sample(undefined, now)
-    } else if (mode === 'live') {
-      currentAudio = audioAnalyzer?.getFeatures() ?? emptyAudioFeatures
-      currentSurface = roomMapper.sample(options.video, now)
-      currentPerson = personTracker?.detect(options.video, now) ?? emptyPersonFrame
+    if (mode === "demo") {
+      currentAudio = createDemoAudioFeatures(now);
+      currentPerson = createDemoPersonFrame(now);
+      currentSurface = roomMapper.sample(undefined, now);
+    } else if (mode === "live") {
+      currentAudio = audioAnalyzer?.getFeatures() ?? emptyAudioFeatures;
+      currentSurface = roomMapper.sample(options.video, now);
+      currentPerson =
+        personTracker?.detect(options.video, now) ?? emptyPersonFrame;
     }
 
     if (sync && now - lastSyncAt > 120) {
-      sync.broadcast(currentAudio)
-      lastSyncAt = now
+      sync.broadcast(currentAudio);
+      lastSyncAt = now;
     }
 
     const frame = {
@@ -136,42 +141,42 @@ export function createRoomSession(options: RoomSessionOptions): RoomSession {
       sync: sync?.getFrame() ?? emptySyncFrame,
       palette: settings.palette,
       intensity: settings.intensity,
-    }
-    visualizer?.update(frame, now)
-    roomMapper.drawOverlay(currentSurface, currentPerson)
-    emit()
-    animationFrame = requestAnimationFrame(tick)
-  }
+    };
+    visualizer?.update(frame, now);
+    roomMapper.drawOverlay(currentSurface, currentPerson);
+    emit();
+    animationFrame = requestAnimationFrame(tick);
+  };
 
   const startLoop = () => {
-    cancelAnimationFrame(animationFrame)
-    lastFrameAt = performance.now()
-    animationFrame = requestAnimationFrame(tick)
-  }
+    cancelAnimationFrame(animationFrame);
+    lastFrameAt = performance.now();
+    animationFrame = requestAnimationFrame(tick);
+  };
 
-  window.addEventListener('resize', () => {
-    visualizer?.resize()
-    roomMapper.resize()
-  })
+  window.addEventListener("resize", () => {
+    visualizer?.resize();
+    roomMapper.resize();
+  });
 
   return {
     async startDemo() {
-      stopMedia()
-      await ensureVisualizer()
-      mode = 'demo'
-      camera = 'idle'
-      microphone = 'idle'
-      vision = 'synthetic demo'
-      message = 'Demo mode is running without camera or microphone.'
-      startLoop()
-      emit(true)
+      stopMedia();
+      await ensureVisualizer();
+      mode = "demo";
+      camera = "idle";
+      microphone = "idle";
+      vision = "synthetic demo";
+      message = "Demo mode is running without camera or microphone.";
+      startLoop();
+      emit(true);
     },
     async startLive() {
-      mode = 'idle'
-      camera = 'requesting'
-      microphone = 'requesting'
-      message = 'Requesting camera and microphone.'
-      emit(true)
+      mode = "idle";
+      camera = "requesting";
+      microphone = "requesting";
+      message = "Requesting camera and microphone.";
+      emit(true);
       try {
         mediaStream = await navigator.mediaDevices.getUserMedia({
           audio: {
@@ -180,89 +185,95 @@ export function createRoomSession(options: RoomSessionOptions): RoomSession {
             autoGainControl: false,
           },
           video: {
-            facingMode: { ideal: 'environment' },
+            facingMode: { ideal: "environment" },
             width: { ideal: 1280 },
             height: { ideal: 720 },
           },
-        })
+        });
       } catch {
-        camera = 'denied'
-        microphone = 'denied'
-        message = 'Camera or microphone permission was denied. Demo mode still works.'
-        emit(true)
-        return
+        camera = "denied";
+        microphone = "denied";
+        message =
+          "Camera or microphone permission was denied. Demo mode still works.";
+        emit(true);
+        return;
       }
 
-      await ensureVisualizer()
-      options.video.srcObject = mediaStream
-      options.video.muted = true
-      await options.video.play()
+      await ensureVisualizer();
+      options.video.srcObject = mediaStream;
+      options.video.muted = true;
+      await options.video.play();
 
-      const audioTrackCount = mediaStream.getAudioTracks().length
-      const videoTrackCount = mediaStream.getVideoTracks().length
-      microphone = audioTrackCount > 0 ? 'granted' : 'unavailable'
-      camera = videoTrackCount > 0 ? 'granted' : 'unavailable'
+      const audioTrackCount = mediaStream.getAudioTracks().length;
+      const videoTrackCount = mediaStream.getVideoTracks().length;
+      microphone = audioTrackCount > 0 ? "granted" : "unavailable";
+      camera = videoTrackCount > 0 ? "granted" : "unavailable";
 
-      const [{ createAudioAnalyzer }, { createPersonTracker }] = await Promise.all([
-        import('../audio/audioAnalyzer'),
-        import('../vision/personTracker'),
-      ])
+      const [{ createAudioAnalyzer }, { createPersonTracker }] =
+        await Promise.all([
+          import("../audio/audioAnalyzer"),
+          import("../vision/personTracker"),
+        ]);
       if (audioTrackCount > 0) {
-        audioAnalyzer = await createAudioAnalyzer(mediaStream)
-        await audioAnalyzer.start()
+        audioAnalyzer = await createAudioAnalyzer(mediaStream);
+        await audioAnalyzer.start();
       }
-      vision = 'loading MediaPipe'
-      emit(true)
-      personTracker = await createPersonTracker()
-      vision = personTracker.status
-      mode = 'live'
-      message = 'Live room visualization is running.'
-      startLoop()
-      emit(true)
+      vision = "loading MediaPipe";
+      emit(true);
+      personTracker = await createPersonTracker();
+      vision = personTracker.status;
+      mode = "live";
+      message = "Live room visualization is running.";
+      startLoop();
+      emit(true);
     },
     stop() {
-      cancelAnimationFrame(animationFrame)
-      mode = 'idle'
-      stopMedia()
-      currentAudio = emptyAudioFeatures
-      currentSurface = emptySurfaceFrame
-      currentPerson = emptyPersonFrame
-      message = 'Stopped'
-      emit(true)
+      cancelAnimationFrame(animationFrame);
+      mode = "idle";
+      stopMedia();
+      currentAudio = emptyAudioFeatures;
+      currentSurface = emptySurfaceFrame;
+      currentPerson = emptyPersonFrame;
+      message = "Stopped";
+      emit(true);
     },
     setPalette(palette) {
-      settings = { ...settings, palette }
-      writeSettings(settings)
-      emit(true)
+      settings = { ...settings, palette };
+      writeSettings(settings);
+      emit(true);
     },
     setIntensity(intensity) {
-      settings = { ...settings, intensity }
-      writeSettings(settings)
-      emit(true)
+      settings = { ...settings, intensity };
+      writeSettings(settings);
+      emit(true);
     },
     async connectSync(roomCode, syncMode) {
-      settings = { ...settings, roomCode }
-      writeSettings(settings)
-      const { createMeshSync } = await import('../sync/webrtcMesh')
-      sync?.dispose()
-      sync = createMeshSync()
-      message = syncMode === 'host' ? `Hosting room ${roomCode}.` : `Joining room ${roomCode}.`
-      emit(true)
+      settings = { ...settings, roomCode };
+      writeSettings(settings);
+      const { createMeshSync } = await import("../sync/webrtcMesh");
+      sync?.dispose();
+      sync = createMeshSync();
+      message =
+        syncMode === "host"
+          ? `Hosting room ${roomCode}.`
+          : `Joining room ${roomCode}.`;
+      emit(true);
       try {
-        await sync.connect(roomCode, syncMode)
+        await sync.connect(roomCode, syncMode);
       } catch {
-        message = 'WebRTC signaling is unavailable right now. Local visuals keep running.'
+        message =
+          "WebRTC signaling is unavailable right now. Local visuals keep running.";
       }
-      emit(true)
+      emit(true);
     },
     disconnectSync() {
-      sync?.dispose()
-      sync = undefined
-      message = 'Sync disconnected.'
-      emit(true)
+      sync?.dispose();
+      sync = undefined;
+      message = "Sync disconnected.";
+      emit(true);
     },
     getSettings() {
-      return settings
+      return settings;
     },
-  }
+  };
 }

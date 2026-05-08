@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+message="$(head -n 1 "$1")"
+if [[ ! "$message" =~ ^(feat|fix|docs|chore|refactor|test|ops|data)(\([a-z0-9._-]+\))?:\ .+ ]]; then
+  echo "Commit message must use Conventional Commits." >&2
+  exit 1
+fi
