@@ -1,6 +1,5 @@
 import tailwindcss from "@tailwindcss/vite";
 import react from "@vitejs/plugin-react";
-import { execSync } from "node:child_process";
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { defineConfig } from "vitest/config";
@@ -11,16 +10,7 @@ const pkg = JSON.parse(
   version: string;
 };
 
-const gitCommit = (() => {
-  try {
-    return execSync("git rev-parse --short=12 HEAD", {
-      encoding: "utf8",
-      stdio: ["ignore", "pipe", "ignore"],
-    }).trim();
-  } catch {
-    return "dev";
-  }
-})();
+const gitCommit = process.env.VITE_APP_COMMIT ?? "offline";
 
 export default defineConfig({
   base: "/room-vj/",

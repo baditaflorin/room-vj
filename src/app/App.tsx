@@ -137,8 +137,7 @@ function AppView() {
               {APP_NAME}
             </h1>
             <p className="text-xs text-white/62">
-              v{APP_VERSION} · build {APP_COMMIT} · main{" "}
-              {commitQuery.data ?? APP_COMMIT}
+              v{APP_VERSION} · commit {commitQuery.data ?? APP_COMMIT}
             </p>
           </div>
           <nav
