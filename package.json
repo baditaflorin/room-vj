@@ -3,6 +3,12 @@
   "private": true,
   "version": "0.1.0",
   "description": "Browser-based live room visuals that react to music, people, and synced nearby devices.",
+  "homepage": "https://baditaflorin.github.io/room-vj/",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/baditaflorin/room-vj.git"
+  },
+  "license": "MIT",
   "type": "module",
   "scripts": {
     "dev": "vite",

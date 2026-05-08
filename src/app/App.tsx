@@ -68,6 +68,7 @@ function AppView() {
 
   const commitQuery = useQuery({
     queryKey: ["github-main-commit"],
+    enabled: window.location.hostname.endsWith("github.io"),
     queryFn: async () => {
       const response = await fetch(GITHUB_API_MAIN_BRANCH);
       if (!response.ok) throw new Error("GitHub metadata unavailable");

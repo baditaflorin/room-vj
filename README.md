@@ -1,73 +1,86 @@
-# React + TypeScript + Vite
+# Room VJ
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Live site: https://baditaflorin.github.io/room-vj/
 
-Currently, two official plugins are available:
+Repository: https://github.com/baditaflorin/room-vj
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+Support: https://www.paypal.com/paypalme/florinbadita
 
-## React Compiler
+Room VJ is a browser-based live room visualizer: camera and microphone input feed real-time room sampling, audio-reactive shaders, person-aware distortion, and WebRTC room sync from a static GitHub Pages URL.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+![Room VJ demo screenshot](docs/screenshot.png)
 
-## Expanding the ESLint configuration
+## Quickstart
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(["dist"]),
-  {
-    files: ["**/*.{ts,tsx}"],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ["./tsconfig.node.json", "./tsconfig.app.json"],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-]);
+```bash
+npm install
+make install-hooks
+make dev
+make test
+make smoke
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## What Works In v0.1.0
 
-```js
-// eslint.config.js
-import reactX from "eslint-plugin-react-x";
-import reactDom from "eslint-plugin-react-dom";
+- WebGPU WGSL shader renderer with Three.js WebGL fallback.
+- Live microphone features with Web Audio and Meyda.
+- MediaPipe pose tracking with motion fallback.
+- Low-resolution room surface sampling from the webcam feed.
+- PeerJS/WebRTC data-channel sync by room code.
+- GitHub Pages deployment from `main` branch `/docs`.
+- Public repo and PayPal links in the live UI.
+- Version and current public `main` commit visible in the page header.
 
-export default defineConfig([
-  globalIgnores(["dist"]),
-  {
-    files: ["**/*.{ts,tsx}"],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs["recommended-typescript"],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ["./tsconfig.node.json", "./tsconfig.app.json"],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-]);
+## Architecture
+
+```mermaid
+flowchart LR
+  User["Room visitor"] --> Pages["GitHub Pages static site"]
+  Pages --> Browser["Browser runtime"]
+  Browser --> Camera["Webcam"]
+  Browser --> Mic["Microphone"]
+  Browser --> GPU["WebGPU / Three.js"]
+  Browser --> MediaPipe["MediaPipe Tasks Vision WASM"]
+  Browser --> Meyda["Meyda audio descriptors"]
+  Browser --> PeerJS["Public PeerJS signaling"]
+  Browser <--> Peers["Nearby browsers over WebRTC data channels"]
 ```
+
+More detail: docs/architecture.md
+
+## Deployment
+
+The site is Mode A: pure GitHub Pages. Build output is committed to `docs/`.
+
+```bash
+make build
+git add docs
+git commit -m "ops: publish pages build"
+git push
+```
+
+Deployment notes: docs/deploy.md
+
+## Checks
+
+```bash
+make lint
+make test
+make smoke
+```
+
+`make smoke` builds the app, serves `docs/` exactly like Pages, opens it with Playwright, checks the GitHub/PayPal links, verifies version text, and starts demo mode.
+
+## ADRs
+
+Architecture decisions live in docs/adr/.
+
+The most important decisions are:
+
+- docs/adr/0001-deployment-mode.md
+- docs/adr/0010-github-pages-publishing-strategy.md
+- docs/adr/0017-dependency-policy.md
+
+## Security
+
+Room VJ has no backend and no runtime secrets. Camera and microphone streams stay in the browser. See SECURITY.md and docs/privacy.md.
