@@ -3,7 +3,7 @@ set -euo pipefail
 
 npm run build
 
-PORT="${PORT:-4173}"
+PORT="${PORT:-$((4173 + RANDOM % 2000))}"
 node scripts/serve-static.mjs docs "$PORT" &
 SERVER_PID="$!"
 trap 'kill "$SERVER_PID" >/dev/null 2>&1 || true' EXIT
