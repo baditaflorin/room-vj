@@ -44,7 +44,7 @@ export function createMeshSync(): MeshSync {
   let remotePulse = 0;
   let remoteHue = Math.random();
   const connections = new Map<string, DataConnection>();
-  let retryTimer = 0;
+  let retryTimer: number | undefined;
 
   const allPeerIds = () =>
     Array.from(connections.keys()).filter((id) => id !== peerId);
@@ -147,7 +147,7 @@ export function createMeshSync(): MeshSync {
             connectToPeer(hostId);
             retryTimer = window.setInterval(() => {
               if (connections.size === 0) connectToPeer(hostId);
-            }, 2500) as unknown as number;
+            }, 2500);
           }
           resolve();
         });
@@ -193,7 +193,7 @@ export function createMeshSync(): MeshSync {
       };
     },
     dispose() {
-      window.clearInterval(retryTimer);
+      if (retryTimer) window.clearInterval(retryTimer);
       for (const connection of connections.values()) connection.close();
       connections.clear();
       peer?.destroy();

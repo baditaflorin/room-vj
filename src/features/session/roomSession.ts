@@ -1,8 +1,3 @@
-import {
-  readSettings,
-  writeSettings,
-  type StoredSettings,
-} from "../../lib/storage";
 import { createRoomMapper, type RoomMapper } from "../room/roomMapper";
 import type { MeshSync } from "../sync/webrtcMesh";
 import type { VisualizerEngine } from "../visualizer/visualizerEngine";
@@ -39,7 +34,6 @@ export interface RoomSession {
   setIntensity(intensity: number): void;
   connectSync(roomCode: string, mode: "host" | "join"): Promise<void>;
   disconnectSync(): void;
-  getSettings(): StoredSettings;
 }
 
 interface AudioAnalyzerRef {
@@ -56,7 +50,10 @@ interface PersonTrackerRef {
 
 export function createRoomSession(options: RoomSessionOptions): RoomSession {
   const roomMapper: RoomMapper = createRoomMapper(options.overlayCanvas);
-  let settings = readSettings();
+  let settings = {
+    palette: "prism" as PaletteName,
+    intensity: 1,
+  };
   let visualizer: VisualizerEngine | undefined;
   let mediaStream: MediaStream | undefined;
   let audioAnalyzer: AudioAnalyzerRef | undefined;
@@ -165,10 +162,12 @@ export function createRoomSession(options: RoomSessionOptions): RoomSession {
     animationFrame = requestAnimationFrame(tick);
   };
 
-  window.addEventListener("resize", () => {
+  const handleResize = () => {
     visualizer?.resize();
     roomMapper.resize();
-  });
+  };
+
+  window.addEventListener("resize", handleResize);
 
   return {
     async startDemo() {
@@ -249,21 +248,18 @@ export function createRoomSession(options: RoomSessionOptions): RoomSession {
       currentSurface = emptySurfaceFrame;
       currentPerson = emptyPersonFrame;
       message = "Stopped";
+      window.removeEventListener("resize", handleResize);
       emit(true);
     },
     setPalette(palette) {
       settings = { ...settings, palette };
-      writeSettings(settings);
       emit(true);
     },
     setIntensity(intensity) {
       settings = { ...settings, intensity };
-      writeSettings(settings);
       emit(true);
     },
     async connectSync(roomCode, syncMode) {
-      settings = { ...settings, roomCode };
-      writeSettings(settings);
       const { createMeshSync } = await import("../sync/webrtcMesh");
       sync?.dispose();
       sync = createMeshSync();
@@ -285,9 +281,6 @@ export function createRoomSession(options: RoomSessionOptions): RoomSession {
       sync = undefined;
       message = "Sync disconnected.";
       emit(true);
-    },
-    getSettings() {
-      return settings;
     },
   };
 }

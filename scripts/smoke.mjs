@@ -32,8 +32,17 @@ if (paypalHref !== "https://www.paypal.com/paypalme/florinbadita") {
 await page
   .getByText(new RegExp(`v${packageJson.version.replace(/\./g, "\\.")}`))
   .waitFor();
+await page.getByRole("heading", { name: "Session State" }).waitFor();
 await page.getByRole("button", { name: "Demo" }).click();
-await page.getByText(/Live room visualization is running/i).waitFor();
+await page.getByText(/Demo mode is running/i).waitFor();
+const downloadPromise = page.waitForEvent("download");
+await page.getByRole("button", { name: "Download State" }).click();
+const download = await downloadPromise;
+if (!download.suggestedFilename().startsWith("room-vj-session-")) {
+  throw new Error(
+    `Unexpected state download name: ${download.suggestedFilename()}`,
+  );
+}
 await page.waitForTimeout(800);
 
 if (errors.length > 0)
