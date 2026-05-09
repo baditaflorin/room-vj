@@ -1,0 +1,10 @@
+{
+  "id": "crowded-party",
+  "audioClass": "music",
+  "roomClass": "usable",
+  "trackingClass": "multi-subject-risk",
+  "syncClass": "mesh",
+  "minSessionConfidence": 0.5,
+  "messageIncludes": "Multiple people",
+  "actionIncludes": "single subject"
+}

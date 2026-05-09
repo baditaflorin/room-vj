@@ -1,0 +1,46 @@
+{
+  "id": "low-light-led",
+  "title": "Low light with LED accents",
+  "description": "Dark room with colored LEDs and weak camera signal.",
+  "category": "messy",
+  "frames": [
+    {
+      "audio": {
+        "rms": 0.34,
+        "energy": 0.37,
+        "spectralCentroid": 0.49,
+        "spectralFlux": 0.28,
+        "zeroCrossingRate": 0.16,
+        "beatPulse": 0.76,
+        "beatCount": 10
+      },
+      "surface": {
+        "brightness": 0.11,
+        "edgeEnergy": 0.22,
+        "planeCount": 8,
+        "width": 16,
+        "height": 9,
+        "grid": []
+      },
+      "person": {
+        "active": true,
+        "centerX": 0.51,
+        "centerY": 0.48,
+        "radius": 0.17,
+        "velocity": 0.31,
+        "confidence": 0.44,
+        "subjectCount": 1,
+        "source": "motion"
+      },
+      "sync": {
+        "roomCode": "DARK88",
+        "peerCount": 0,
+        "leader": true,
+        "remotePulse": 0,
+        "remoteHue": 0.11,
+        "latencyMs": 0,
+        "status": "hosting room"
+      }
+    }
+  ]
+}

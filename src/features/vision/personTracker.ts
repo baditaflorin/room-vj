@@ -26,7 +26,7 @@ export async function createPersonTracker(): Promise<PersonTracker> {
         delegate: "GPU",
       },
       runningMode: "VIDEO",
-      numPoses: 1,
+      numPoses: 2,
       minPoseDetectionConfidence: 0.35,
       minPosePresenceConfidence: 0.35,
       minTrackingConfidence: 0.35,
@@ -50,11 +50,20 @@ function createMediaPipeTracker(
         return previous;
       const result = landmarker.detectForVideo(video, now);
       const landmarks = result.landmarks[0];
+      const visibleSubjectCount = result.landmarks.filter(
+        (pose) => pose.length > 0,
+      ).length;
       if (!landmarks || landmarks.length === 0) {
         const motionFrame = fallback.detect(video, now);
         previous = motionFrame.active
           ? motionFrame
-          : { ...previous, active: false, confidence: 0, source: "none" };
+          : {
+              ...previous,
+              active: false,
+              confidence: 0,
+              subjectCount: 0,
+              source: "none",
+            };
         return previous;
       }
 
@@ -65,7 +74,13 @@ function createMediaPipeTracker(
         const motionFrame = fallback.detect(video, now);
         previous = motionFrame.active
           ? motionFrame
-          : { ...previous, active: false, confidence: 0, source: "none" };
+          : {
+              ...previous,
+              active: false,
+              confidence: 0,
+              subjectCount: 0,
+              source: "none",
+            };
         return previous;
       }
 
@@ -95,6 +110,7 @@ function createMediaPipeTracker(
         radius: smooth(previous.radius, radius, 0.3),
         velocity,
         confidence: clamp(visible.length / landmarks.length),
+        subjectCount: visibleSubjectCount,
         source: "mediapipe",
       };
       return previous;
@@ -155,6 +171,7 @@ function createMotionTracker(): PersonTracker {
           ...previous,
           active: false,
           confidence: 0,
+          subjectCount: 0,
           velocity: smooth(previous.velocity, 0, 0.2),
         };
         return previous;
@@ -174,6 +191,7 @@ function createMotionTracker(): PersonTracker {
         radius: smooth(previous.radius, radius, 0.25),
         velocity: clamp(changed / 90),
         confidence: clamp(changed / 180),
+        subjectCount: 1,
         source: "motion",
       };
       return previous;

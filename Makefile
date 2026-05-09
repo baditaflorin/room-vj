@@ -1,4 +1,4 @@
-.PHONY: help install-hooks dev build data test test-integration smoke lint fmt fmt-check pages-preview clean hooks-pre-commit hooks-commit-msg hooks-pre-push docker-build docker-push release compose-up compose-down
+.PHONY: help install-hooks dev build data test test-fixtures test-integration smoke lint fmt fmt-check pages-preview clean hooks-pre-commit hooks-commit-msg hooks-pre-push docker-build docker-push release compose-up compose-down
 
 VERSION := $(shell node -p "require('./package.json').version")
 
@@ -9,6 +9,7 @@ help:
 		"make build             build Pages-ready docs/" \
 		"make data              Mode A no-op" \
 		"make test              run unit tests" \
+		"make test-fixtures     run deterministic real-data fixtures" \
 		"make test-integration  Mode A no-op" \
 		"make smoke             build and smoke test docs/" \
 		"make lint              run eslint" \
@@ -32,6 +33,9 @@ data:
 
 test:
 	npm run test
+
+test-fixtures:
+	npm run test:fixtures
 
 test-integration:
 	@echo "Mode A: no integration suite yet."

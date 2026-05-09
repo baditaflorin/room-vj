@@ -1,6 +1,10 @@
+import { readFileSync } from "node:fs";
 import { chromium } from "playwright";
 
 const url = process.env.SMOKE_URL ?? "http://127.0.0.1:4173/room-vj/";
+const packageJson = JSON.parse(
+  readFileSync(new URL("../package.json", import.meta.url), "utf8"),
+);
 const browser = await chromium.launch({ headless: true });
 const page = await browser.newPage({ viewport: { width: 1366, height: 900 } });
 const errors = [];
@@ -25,9 +29,11 @@ if (paypalHref !== "https://www.paypal.com/paypalme/florinbadita") {
   throw new Error(`Unexpected PayPal link: ${paypalHref}`);
 }
 
-await page.getByText(/v0\.1\.0/).waitFor();
+await page
+  .getByText(new RegExp(`v${packageJson.version.replace(/\./g, "\\.")}`))
+  .waitFor();
 await page.getByRole("button", { name: "Demo" }).click();
-await page.getByText(/Demo mode is running/i).waitFor();
+await page.getByText(/Live room visualization is running/i).waitFor();
 await page.waitForTimeout(800);
 
 if (errors.length > 0)

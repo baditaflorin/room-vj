@@ -1,0 +1,46 @@
+{
+  "id": "crowded-party",
+  "title": "Crowded party floor",
+  "description": "Multiple moving people, loud music, unstable subject ownership.",
+  "category": "messy",
+  "frames": [
+    {
+      "audio": {
+        "rms": 0.51,
+        "energy": 0.58,
+        "spectralCentroid": 0.67,
+        "spectralFlux": 0.41,
+        "zeroCrossingRate": 0.24,
+        "beatPulse": 0.93,
+        "beatCount": 30
+      },
+      "surface": {
+        "brightness": 0.48,
+        "edgeEnergy": 0.39,
+        "planeCount": 24,
+        "width": 16,
+        "height": 9,
+        "grid": []
+      },
+      "person": {
+        "active": true,
+        "centerX": 0.58,
+        "centerY": 0.47,
+        "radius": 0.16,
+        "velocity": 0.72,
+        "confidence": 0.77,
+        "subjectCount": 3,
+        "source": "mediapipe"
+      },
+      "sync": {
+        "roomCode": "PARTY9",
+        "peerCount": 2,
+        "leader": true,
+        "remotePulse": 0.88,
+        "remoteHue": 0.61,
+        "latencyMs": 81,
+        "status": "connected to 2 peers"
+      }
+    }
+  ]
+}

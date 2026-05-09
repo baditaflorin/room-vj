@@ -33,6 +33,7 @@ export interface PersonFrame {
   radius: number;
   velocity: number;
   confidence: number;
+  subjectCount?: number;
   source: "mediapipe" | "motion" | "demo" | "none";
 }
 
@@ -64,9 +65,13 @@ export interface RuntimeStatus {
   vision: string;
   sync: SyncFrame;
   message: string;
+  recommendedAction: string;
+  sessionConfidence: number;
+  warnings: string[];
   audio: AudioFeatures;
   person: PersonFrame;
   surface: SurfaceFrame;
+  diagnostics?: import("./analysisTypes").SessionDiagnostics;
 }
 
 export const emptyAudioFeatures: AudioFeatures = {
@@ -95,6 +100,7 @@ export const emptyPersonFrame: PersonFrame = {
   radius: 0,
   velocity: 0,
   confidence: 0,
+  subjectCount: 0,
   source: "none",
 };
 

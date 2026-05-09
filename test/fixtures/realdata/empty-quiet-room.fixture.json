@@ -1,0 +1,46 @@
+{
+  "id": "empty-quiet-room",
+  "title": "Empty quiet room",
+  "description": "No visible person and almost no microphone signal.",
+  "category": "edge",
+  "frames": [
+    {
+      "audio": {
+        "rms": 0.03,
+        "energy": 0.02,
+        "spectralCentroid": 0.12,
+        "spectralFlux": 0.01,
+        "zeroCrossingRate": 0.05,
+        "beatPulse": 0,
+        "beatCount": 0
+      },
+      "surface": {
+        "brightness": 0.34,
+        "edgeEnergy": 0.18,
+        "planeCount": 11,
+        "width": 16,
+        "height": 9,
+        "grid": []
+      },
+      "person": {
+        "active": false,
+        "centerX": 0.5,
+        "centerY": 0.5,
+        "radius": 0,
+        "velocity": 0.01,
+        "confidence": 0.01,
+        "subjectCount": 0,
+        "source": "none"
+      },
+      "sync": {
+        "roomCode": "",
+        "peerCount": 0,
+        "leader": true,
+        "remotePulse": 0,
+        "remoteHue": 0,
+        "latencyMs": 0,
+        "status": "offline"
+      }
+    }
+  ]
+}

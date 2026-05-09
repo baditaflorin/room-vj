@@ -1,0 +1,10 @@
+{
+  "id": "empty-quiet-room",
+  "audioClass": "silence",
+  "roomClass": "flat",
+  "trackingClass": "absent",
+  "syncClass": "offline",
+  "minSessionConfidence": 0.45,
+  "messageIncludes": "quiet",
+  "actionIncludes": "step into frame"
+}

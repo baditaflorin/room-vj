@@ -1,0 +1,46 @@
+{
+  "id": "mirror-tv-adversarial",
+  "title": "Mirror and TV adversarial scene",
+  "description": "Flickering reflections and a TV image resemble a moving person.",
+  "category": "adversarial",
+  "frames": [
+    {
+      "audio": {
+        "rms": 0.18,
+        "energy": 0.15,
+        "spectralCentroid": 0.41,
+        "spectralFlux": 0.09,
+        "zeroCrossingRate": 0.22,
+        "beatPulse": 0.03,
+        "beatCount": 1
+      },
+      "surface": {
+        "brightness": 0.74,
+        "edgeEnergy": 0.51,
+        "planeCount": 13,
+        "width": 16,
+        "height": 9,
+        "grid": []
+      },
+      "person": {
+        "active": true,
+        "centerX": 0.57,
+        "centerY": 0.43,
+        "radius": 0.14,
+        "velocity": 0.38,
+        "confidence": 0.36,
+        "subjectCount": 1,
+        "source": "motion"
+      },
+      "sync": {
+        "roomCode": "MIRROR",
+        "peerCount": 0,
+        "leader": true,
+        "remotePulse": 0,
+        "remoteHue": 0.31,
+        "latencyMs": 0,
+        "status": "hosting room"
+      }
+    }
+  ]
+}

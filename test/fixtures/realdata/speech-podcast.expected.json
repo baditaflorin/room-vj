@@ -1,0 +1,10 @@
+{
+  "id": "speech-podcast",
+  "audioClass": "speech",
+  "roomClass": "usable",
+  "trackingClass": "stable",
+  "syncClass": "local-only",
+  "minSessionConfidence": 0.5,
+  "messageIncludes": "Speech",
+  "actionIncludes": "Switch to music"
+}

@@ -1,0 +1,10 @@
+{
+  "id": "portrait-mobile",
+  "audioClass": "music",
+  "roomClass": "usable",
+  "trackingClass": "stable",
+  "syncClass": "local-only",
+  "minSessionConfidence": 0.56,
+  "messageIncludes": "Live room visualization is running",
+  "actionIncludes": "Share the invite URL"
+}

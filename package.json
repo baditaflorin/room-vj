@@ -1,7 +1,7 @@
 {
   "name": "room-vj",
   "private": true,
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Browser-based live room visuals that react to music, people, and synced nearby devices.",
   "homepage": "https://baditaflorin.github.io/room-vj/",
   "repository": {
@@ -19,6 +19,7 @@
     "lint": "eslint .",
     "typecheck": "tsc -b",
     "test": "vitest run",
+    "test:fixtures": "vitest run src/features/session/fixtureRunner.test.ts",
     "test:watch": "vitest",
     "fmt": "prettier --write .",
     "fmt:check": "prettier --check .",
@@ -46,7 +47,6 @@
     "@types/react-dom": "^19.2.3",
     "@types/three": "^0.184.1",
     "@vitejs/plugin-react": "^6.0.1",
-    "@webgpu/types": "^0.1.68",
     "@webgpu/types": "^0.1.69",
     "eslint": "^10.2.1",
     "eslint-plugin-react-hooks": "^7.1.1",

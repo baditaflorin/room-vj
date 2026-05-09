@@ -49,12 +49,17 @@ const initialStatus: RuntimeStatus = {
   vision: "idle",
   sync: emptySyncFrame,
   message: "Ready",
+  recommendedAction: "Start live mode or use demo mode.",
+  sessionConfidence: 0,
+  warnings: [],
   audio: emptyAudioFeatures,
   person: emptyPersonFrame,
   surface: emptySurfaceFrame,
 };
 
 function AppView() {
+  const debug =
+    new URLSearchParams(window.location.search).get("debug") === "1";
   const visualCanvasRef = useRef<HTMLCanvasElement | null>(null);
   const overlayCanvasRef = useRef<HTMLCanvasElement | null>(null);
   const videoRef = useRef<HTMLVideoElement | null>(null);
@@ -301,14 +306,68 @@ function AppView() {
           />
           <Metric label="Renderer" value={status.renderer} />
           <Metric label="Vision" value={status.vision} />
+          <Metric
+            label="Confidence"
+            value={`${Math.round(status.sessionConfidence * 100)}%`}
+          />
           <Metric label="Energy" value={status.audio.energy.toFixed(2)} />
-          <Metric label="Person" value={status.person.source} />
+          <Metric
+            label="Audio"
+            value={
+              status.diagnostics?.analysis.audioAssessment.classification ??
+              "unknown"
+            }
+          />
+          <Metric
+            label="Person"
+            value={
+              status.diagnostics?.analysis.personAssessment.classification ??
+              status.person.source
+            }
+          />
           <Metric label="Edges" value={status.surface.edgeEnergy.toFixed(2)} />
+          <Metric
+            label="Room"
+            value={
+              status.diagnostics?.analysis.roomAssessment.classification ??
+              "unknown"
+            }
+          />
           <Metric
             label="Peers"
             value={`${status.sync.peerCount} · ${status.sync.status}`}
           />
         </div>
+        <div className="rounded-md border border-cyan-300/15 bg-cyan-300/8 px-3 py-2 text-xs text-cyan-50/90">
+          {status.recommendedAction}
+        </div>
+        {status.warnings.length > 0 ? (
+          <div className="grid gap-1 text-xs text-amber-100/85">
+            {status.warnings.slice(0, 3).map((warning) => (
+              <div
+                key={warning}
+                className="rounded-md border border-amber-300/15 bg-amber-200/8 px-2 py-1"
+              >
+                {warning}
+              </div>
+            ))}
+          </div>
+        ) : null}
+        {debug && status.diagnostics ? (
+          <pre className="max-h-72 overflow-auto rounded-md border border-white/10 bg-black/35 p-2 text-[10px] leading-4 text-white/70">
+            {JSON.stringify(
+              {
+                state: status.diagnostics.state,
+                audio: status.diagnostics.analysis.audioAssessment,
+                room: status.diagnostics.analysis.roomAssessment,
+                person: status.diagnostics.analysis.personAssessment,
+                sync: status.diagnostics.analysis.syncAssessment,
+              },
+              null,
+              2,
+            )}
+          </pre>
+        ) : null}
       </aside>
     </main>
   );

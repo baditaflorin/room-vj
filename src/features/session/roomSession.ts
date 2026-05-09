@@ -6,6 +6,11 @@ import {
 import { createRoomMapper, type RoomMapper } from "../room/roomMapper";
 import type { MeshSync } from "../sync/webrtcMesh";
 import type { VisualizerEngine } from "../visualizer/visualizerEngine";
+import {
+  analyzeFrame,
+  buildDiagnostics,
+  statusFromDiagnostics,
+} from "./analysisEngine";
 import { createDemoAudioFeatures, createDemoPersonFrame } from "./demoFrames";
 import {
   emptyAudioFeatures,
@@ -71,24 +76,30 @@ export function createRoomSession(options: RoomSessionOptions): RoomSession {
   let lastFrameAt = performance.now();
   let fps = 0;
   let lastSyncAt = 0;
+  let stopped = false;
 
   const emit = (force = false) => {
     const now = performance.now();
     if (!force && now - lastStatusAt < 220) return;
     lastStatusAt = now;
-    options.onStatus({
-      mode,
-      renderer,
-      fps,
+    const analysis = analyzeFrame({
+      audio: currentAudio,
+      surface: currentSurface,
+      person: currentPerson,
+      sync: sync?.getFrame() ?? emptySyncFrame,
+    });
+    if (message !== "Stopped") {
+      message = analysis.message;
+    }
+    const diagnostics = buildDiagnostics({
       camera,
       microphone,
-      vision,
-      sync: sync?.getFrame() ?? emptySyncFrame,
-      message,
-      audio: currentAudio,
-      person: currentPerson,
-      surface: currentSurface,
+      renderer,
+      mode,
+      analysis,
+      stopped,
     });
+    options.onStatus(statusFromDiagnostics(diagnostics, fps, vision));
   };
 
   const ensureVisualizer = async () => {
@@ -163,6 +174,7 @@ export function createRoomSession(options: RoomSessionOptions): RoomSession {
     async startDemo() {
       stopMedia();
       await ensureVisualizer();
+      stopped = false;
       mode = "demo";
       camera = "idle";
       microphone = "idle";
@@ -172,6 +184,7 @@ export function createRoomSession(options: RoomSessionOptions): RoomSession {
       emit(true);
     },
     async startLive() {
+      stopped = false;
       mode = "idle";
       camera = "requesting";
       microphone = "requesting";
@@ -229,6 +242,7 @@ export function createRoomSession(options: RoomSessionOptions): RoomSession {
     },
     stop() {
       cancelAnimationFrame(animationFrame);
+      stopped = true;
       mode = "idle";
       stopMedia();
       currentAudio = emptyAudioFeatures;

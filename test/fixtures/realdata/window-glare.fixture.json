@@ -1,0 +1,46 @@
+{
+  "id": "window-glare",
+  "title": "Daylight glare",
+  "description": "Window and glossy surfaces dominate the frame.",
+  "category": "messy",
+  "frames": [
+    {
+      "audio": {
+        "rms": 0.29,
+        "energy": 0.33,
+        "spectralCentroid": 0.58,
+        "spectralFlux": 0.19,
+        "zeroCrossingRate": 0.19,
+        "beatPulse": 0.42,
+        "beatCount": 6
+      },
+      "surface": {
+        "brightness": 0.79,
+        "edgeEnergy": 0.14,
+        "planeCount": 10,
+        "width": 16,
+        "height": 9,
+        "grid": []
+      },
+      "person": {
+        "active": true,
+        "centerX": 0.44,
+        "centerY": 0.41,
+        "radius": 0.19,
+        "velocity": 0.22,
+        "confidence": 0.58,
+        "subjectCount": 1,
+        "source": "motion"
+      },
+      "sync": {
+        "roomCode": "GLARE1",
+        "peerCount": 0,
+        "leader": true,
+        "remotePulse": 0,
+        "remoteHue": 0.33,
+        "latencyMs": 0,
+        "status": "hosting room"
+      }
+    }
+  ]
+}

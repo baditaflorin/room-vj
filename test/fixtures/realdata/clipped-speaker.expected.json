@@ -1,0 +1,10 @@
+{
+  "id": "clipped-speaker",
+  "audioClass": "clipped",
+  "roomClass": "usable",
+  "trackingClass": "stable",
+  "syncClass": "mesh",
+  "minSessionConfidence": 0.45,
+  "messageIncludes": "clipping",
+  "actionIncludes": "Lower the source volume"
+}

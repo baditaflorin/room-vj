@@ -1,0 +1,10 @@
+{
+  "id": "clean-studio",
+  "audioClass": "music",
+  "roomClass": "usable",
+  "trackingClass": "stable",
+  "syncClass": "mesh",
+  "minSessionConfidence": 0.72,
+  "messageIncludes": "mesh is healthy",
+  "actionIncludes": "Mesh is healthy"
+}

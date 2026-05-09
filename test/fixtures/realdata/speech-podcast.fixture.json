@@ -1,0 +1,46 @@
+{
+  "id": "speech-podcast",
+  "title": "Speech and podcast source",
+  "description": "Voice dominates the source with weak beat structure.",
+  "category": "messy",
+  "frames": [
+    {
+      "audio": {
+        "rms": 0.24,
+        "energy": 0.22,
+        "spectralCentroid": 0.46,
+        "spectralFlux": 0.06,
+        "zeroCrossingRate": 0.33,
+        "beatPulse": 0.04,
+        "beatCount": 2
+      },
+      "surface": {
+        "brightness": 0.43,
+        "edgeEnergy": 0.27,
+        "planeCount": 17,
+        "width": 16,
+        "height": 9,
+        "grid": []
+      },
+      "person": {
+        "active": true,
+        "centerX": 0.49,
+        "centerY": 0.49,
+        "radius": 0.17,
+        "velocity": 0.12,
+        "confidence": 0.83,
+        "subjectCount": 1,
+        "source": "mediapipe"
+      },
+      "sync": {
+        "roomCode": "VOICE7",
+        "peerCount": 0,
+        "leader": true,
+        "remotePulse": 0,
+        "remoteHue": 0.09,
+        "latencyMs": 0,
+        "status": "hosting room"
+      }
+    }
+  ]
+}

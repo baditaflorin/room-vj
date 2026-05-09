@@ -1,0 +1,46 @@
+{
+  "id": "clean-studio",
+  "title": "Clean studio baseline",
+  "description": "Balanced light, one person, stable music, one healthy peer.",
+  "category": "clean",
+  "frames": [
+    {
+      "audio": {
+        "rms": 0.38,
+        "energy": 0.42,
+        "spectralCentroid": 0.56,
+        "spectralFlux": 0.36,
+        "zeroCrossingRate": 0.18,
+        "beatPulse": 0.84,
+        "beatCount": 16
+      },
+      "surface": {
+        "brightness": 0.42,
+        "edgeEnergy": 0.44,
+        "planeCount": 28,
+        "width": 16,
+        "height": 9,
+        "grid": []
+      },
+      "person": {
+        "active": true,
+        "centerX": 0.48,
+        "centerY": 0.46,
+        "radius": 0.18,
+        "velocity": 0.24,
+        "confidence": 0.91,
+        "subjectCount": 1,
+        "source": "mediapipe"
+      },
+      "sync": {
+        "roomCode": "CLEAN42",
+        "peerCount": 1,
+        "leader": true,
+        "remotePulse": 0.61,
+        "remoteHue": 0.22,
+        "latencyMs": 34,
+        "status": "connected to 1 peer"
+      }
+    }
+  ]
+}

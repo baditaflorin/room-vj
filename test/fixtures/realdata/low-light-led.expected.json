@@ -1,0 +1,10 @@
+{
+  "id": "low-light-led",
+  "audioClass": "music",
+  "roomClass": "low-light",
+  "trackingClass": "unstable",
+  "syncClass": "local-only",
+  "minSessionConfidence": 0.3,
+  "messageIncludes": "too dark",
+  "actionIncludes": "front light"
+}

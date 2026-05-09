@@ -1,0 +1,10 @@
+{
+  "id": "join-before-host",
+  "audioClass": "ambient",
+  "roomClass": "usable",
+  "trackingClass": "stable",
+  "syncClass": "waiting-for-host",
+  "minSessionConfidence": 0.42,
+  "messageIncludes": "waiting for a host",
+  "actionIncludes": "switch this device to host"
+}

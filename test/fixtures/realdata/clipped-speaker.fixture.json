@@ -1,0 +1,46 @@
+{
+  "id": "clipped-speaker",
+  "title": "Clipped phone speaker",
+  "description": "Overdriven speaker saturates the mic and flattens the beat response.",
+  "category": "broken",
+  "frames": [
+    {
+      "audio": {
+        "rms": 0.88,
+        "energy": 0.97,
+        "spectralCentroid": 0.31,
+        "spectralFlux": 0.04,
+        "zeroCrossingRate": 0.1,
+        "beatPulse": 0.21,
+        "beatCount": 14
+      },
+      "surface": {
+        "brightness": 0.41,
+        "edgeEnergy": 0.33,
+        "planeCount": 18,
+        "width": 16,
+        "height": 9,
+        "grid": []
+      },
+      "person": {
+        "active": true,
+        "centerX": 0.47,
+        "centerY": 0.45,
+        "radius": 0.2,
+        "velocity": 0.18,
+        "confidence": 0.84,
+        "subjectCount": 1,
+        "source": "mediapipe"
+      },
+      "sync": {
+        "roomCode": "CLIP44",
+        "peerCount": 1,
+        "leader": true,
+        "remotePulse": 0.15,
+        "remoteHue": 0.17,
+        "latencyMs": 45,
+        "status": "connected to 1 peer"
+      }
+    }
+  ]
+}

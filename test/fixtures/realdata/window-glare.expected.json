@@ -1,0 +1,10 @@
+{
+  "id": "window-glare",
+  "audioClass": "ambient",
+  "roomClass": "reflective",
+  "trackingClass": "false-positive-risk",
+  "syncClass": "local-only",
+  "minSessionConfidence": 0.2,
+  "messageIncludes": "Tracking may be following",
+  "actionIncludes": "reflective screens"
+}

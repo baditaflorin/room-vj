@@ -1,0 +1,46 @@
+{
+  "id": "join-before-host",
+  "title": "Join before host exists",
+  "description": "A guest enters a room code before any host device is online.",
+  "category": "broken",
+  "frames": [
+    {
+      "audio": {
+        "rms": 0.27,
+        "energy": 0.29,
+        "spectralCentroid": 0.5,
+        "spectralFlux": 0.17,
+        "zeroCrossingRate": 0.18,
+        "beatPulse": 0.22,
+        "beatCount": 4
+      },
+      "surface": {
+        "brightness": 0.4,
+        "edgeEnergy": 0.24,
+        "planeCount": 14,
+        "width": 16,
+        "height": 9,
+        "grid": []
+      },
+      "person": {
+        "active": true,
+        "centerX": 0.5,
+        "centerY": 0.48,
+        "radius": 0.16,
+        "velocity": 0.13,
+        "confidence": 0.75,
+        "subjectCount": 1,
+        "source": "mediapipe"
+      },
+      "sync": {
+        "roomCode": "WAIT55",
+        "peerCount": 0,
+        "leader": false,
+        "remotePulse": 0,
+        "remoteHue": 0.15,
+        "latencyMs": 0,
+        "status": "waiting for host"
+      }
+    }
+  ]
+}

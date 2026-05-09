@@ -1,0 +1,46 @@
+{
+  "id": "portrait-mobile",
+  "title": "Portrait mobile framing",
+  "description": "Portrait framing with subject filling much of the camera view.",
+  "category": "edge",
+  "frames": [
+    {
+      "audio": {
+        "rms": 0.31,
+        "energy": 0.36,
+        "spectralCentroid": 0.54,
+        "spectralFlux": 0.29,
+        "zeroCrossingRate": 0.17,
+        "beatPulse": 0.67,
+        "beatCount": 8
+      },
+      "surface": {
+        "brightness": 0.38,
+        "edgeEnergy": 0.28,
+        "planeCount": 15,
+        "width": 9,
+        "height": 16,
+        "grid": []
+      },
+      "person": {
+        "active": true,
+        "centerX": 0.52,
+        "centerY": 0.52,
+        "radius": 0.31,
+        "velocity": 0.19,
+        "confidence": 0.81,
+        "subjectCount": 1,
+        "source": "mediapipe"
+      },
+      "sync": {
+        "roomCode": "PHONE2",
+        "peerCount": 0,
+        "leader": true,
+        "remotePulse": 0,
+        "remoteHue": 0.22,
+        "latencyMs": 0,
+        "status": "hosting room"
+      }
+    }
+  ]
+}

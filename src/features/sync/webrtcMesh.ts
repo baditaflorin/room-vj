@@ -44,6 +44,7 @@ export function createMeshSync(): MeshSync {
   let remotePulse = 0;
   let remoteHue = Math.random();
   const connections = new Map<string, DataConnection>();
+  let retryTimer = 0;
 
   const allPeerIds = () =>
     Array.from(connections.keys()).filter((id) => id !== peerId);
@@ -59,6 +60,7 @@ export function createMeshSync(): MeshSync {
   const connectToPeer = (targetPeerId: string) => {
     if (!peer || targetPeerId === peerId || connections.has(targetPeerId))
       return;
+    status = leader ? status : "waiting for host";
     const connection = peer.connect(targetPeerId, { reliable: true });
     attachConnection(connection);
   };
@@ -82,6 +84,7 @@ export function createMeshSync(): MeshSync {
       if (message.type === "hello") {
         if (message.roomCode !== roomCode) return;
         connections.set(message.peerId, connection);
+        status = `connected to ${connections.size} peer${connections.size === 1 ? "" : "s"}`;
         if (leader)
           broadcastMessage({
             type: "peer-list",
@@ -102,7 +105,9 @@ export function createMeshSync(): MeshSync {
       status =
         connections.size > 0
           ? `connected to ${connections.size} peer${connections.size === 1 ? "" : "s"}`
-          : "online";
+          : leader
+            ? "hosting room"
+            : "waiting for host";
     });
     connection.on("error", () => {
       connections.delete(connection.peer);
@@ -137,8 +142,13 @@ export function createMeshSync(): MeshSync {
         );
         peer.on("open", () => {
           window.clearTimeout(timeout);
-          status = leader ? "hosting room" : "joining room";
-          if (!leader) connectToPeer(hostId);
+          status = leader ? "hosting room" : "waiting for host";
+          if (!leader) {
+            connectToPeer(hostId);
+            retryTimer = window.setInterval(() => {
+              if (connections.size === 0) connectToPeer(hostId);
+            }, 2500) as unknown as number;
+          }
           resolve();
         });
         peer.on("connection", attachConnection);
@@ -183,6 +193,7 @@ export function createMeshSync(): MeshSync {
       };
     },
     dispose() {
+      window.clearInterval(retryTimer);
       for (const connection of connections.values()) connection.close();
       connections.clear();
       peer?.destroy();
