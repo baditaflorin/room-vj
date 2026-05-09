@@ -20,7 +20,7 @@ make test
 make smoke
 ```
 
-## What Works In v0.2.0
+## What Works In v0.3.0
 
 - WebGPU WGSL shader renderer with Three.js WebGL fallback.
 - Live microphone features with Web Audio and Meyda.
@@ -29,7 +29,9 @@ make smoke
 - PeerJS/WebRTC data-channel sync by room code.
 - Real-data inference engine with confidence, warnings, and recommended actions.
 - Deterministic 10-fixture regression suite for messy room/audio/sync scenarios.
-- `?debug=1` overlay for inspectable runtime reasoning.
+- Full session-state workflow: copy share link, download state, copy state JSON, import state, reset state.
+- `?debug=1` overlay plus an in-app debug toggle for inspectable runtime reasoning.
+- Diagnostics JSON export for reproducible support reports.
 - GitHub Pages deployment from `main` branch `/docs`.
 - Public repo and PayPal links in the live UI.
 - Version and current public `main` commit visible in the page header.
@@ -73,7 +75,16 @@ make test-fixtures
 make smoke
 ```
 
-`make smoke` builds the app, serves `docs/` exactly like Pages, opens it with Playwright, checks the GitHub/PayPal links, verifies version text, and starts demo mode.
+`make smoke` builds the app, serves `docs/` exactly like Pages, opens it with Playwright, checks the GitHub/PayPal links, verifies version text, starts demo mode, and downloads a state file.
+
+## Phase 3
+
+Phase 3 completeness notes live at:
+
+- docs/phase3/findings.md
+- docs/phase3/plan.md
+- docs/phase3/stranger-test.md
+- docs/postmortem-phase3.md
 
 ## ADRs
 

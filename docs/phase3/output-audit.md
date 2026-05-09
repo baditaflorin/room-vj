@@ -9,27 +9,21 @@ Status key:
 - `red` - expected but missing
 - `gray` - not part of the product surface
 
-| Output pathway                               | Status   | Current behavior in v0.2.0                                  | What a stranger needs          |
-| -------------------------------------------- | -------- | ----------------------------------------------------------- | ------------------------------ |
-| Live visual output on canvas                 | `green`  | Core visuals render in demo and live mode                   | Keep                           |
-| Copy invite URL                              | `green`  | URL copies to clipboard                                     | Keep                           |
-| Shareable URL that recreates session choices | `red`    | URL only carries `room`                                     | Add versioned share-state URL  |
-| Downloadable session state file              | `red`    | No export path                                              | Add JSON export                |
-| Import/export round trip                     | `red`    | No import/export pair exists                                | Add schema-backed state bundle |
-| Diagnostics export                           | `red`    | Debug overlay exists, but it cannot be taken out of the app | Add JSON export                |
-| Visible confirmation after copy/export       | `yellow` | Invite copy confirms; other outputs do not exist            | Add uniform confirmations      |
-| Screenshot / print / embed code              | `gray`   | Not part of the declared product                            | Keep out of scope and document |
-| API / curl-ready output                      | `gray`   | No runtime backend exists                                   | Keep out of scope and document |
+| Output pathway                               | Status  | Final behavior in v0.3.0                                                       | Notes                    |
+| -------------------------------------------- | ------- | ------------------------------------------------------------------------------ | ------------------------ |
+| Live visual output on canvas                 | `green` | Core visuals render in demo and live mode                                      | Shipped                  |
+| Copy invite URL                              | `green` | `Copy Link` writes the share URL                                               | Shipped                  |
+| Shareable URL that recreates session choices | `green` | Share URL includes room, palette, intensity, sync intent, launch intent, debug | Shipped                  |
+| Downloadable session state file              | `green` | `Download State` exports a versioned JSON file                                 | Shipped                  |
+| Import/export round trip                     | `green` | Exported state imports back and restores the same session choices              | Shipped                  |
+| Diagnostics export                           | `green` | `Export Diagnostics` downloads a portable JSON artifact                        | Shipped                  |
+| Visible confirmation after copy/export       | `green` | Copy, export, import, reset, and diagnostics actions all show explicit notices | Shipped                  |
+| Screenshot / print / embed code              | `gray`  | Not part of the declared product                                               | Out of scope by ADR 0062 |
+| API / curl-ready output                      | `gray`  | No runtime backend exists                                                      | Out of scope by ADR 0062 |
 
-Summary:
+Summary after implementation:
 
-- `green`: 2
-- `yellow`: 1
-- `red`: 4
+- `green`: 7
+- `yellow`: 0
+- `red`: 0
 - `gray`: 2
-
-Top blockers:
-
-1. Users cannot save or reload a working setup.
-2. There is no portable diagnostics artifact for support or reproduction.
-3. Shared links are too thin to count as a true output path.

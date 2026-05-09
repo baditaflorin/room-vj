@@ -2,23 +2,30 @@
 
 Audit date: 2026-05-10
 
-| Control          | Status   | Current behavior in v0.2.0                                                             | Gap                                     |
-| ---------------- | -------- | -------------------------------------------------------------------------------------- | --------------------------------------- |
-| `Start Live`     | `green`  | Requests devices and starts live mode                                                  | Keep                                    |
-| `Demo`           | `green`  | Starts synthetic mode                                                                  | Keep                                    |
-| `Stop`           | `yellow` | Stops the loop, but the app does not clearly preserve or reset the rest of the session | Add explicit reset/export semantics     |
-| Palette swatches | `green`  | Persist and update visuals                                                             | Keep                                    |
-| Intensity slider | `green`  | Persists and updates visuals                                                           | Keep                                    |
-| Room code field  | `green`  | Normalizes text and persists                                                           | Keep                                    |
-| `Host`           | `yellow` | Works, but does not explain what "host" means to a first-time user                     | Add inline help and share intent        |
-| `Join`           | `yellow` | Works, but a deep-linked room does not guide the next step                             | Add auto-join intent or clear next step |
-| `Copy` invite    | `green`  | Copies URL and confirms                                                                | Keep                                    |
-| Repo link        | `green`  | Opens the repo                                                                         | Keep                                    |
-| PayPal link      | `green`  | Opens PayPal                                                                           | Keep                                    |
-| Debug overlay    | `yellow` | Exists via `?debug=1`, but no in-app explanation or export                             | Add explicit import/export and help     |
+| Control              | Status  | Final behavior in v0.3.0                                                   |
+| -------------------- | ------- | -------------------------------------------------------------------------- |
+| `Start Live`         | `green` | Requests devices and starts live mode                                      |
+| `Demo`               | `green` | Starts synthetic mode                                                      |
+| `Stop`               | `green` | Stops playback while keeping session state available for save/share/import |
+| Palette swatches     | `green` | Persist and update visuals                                                 |
+| Intensity slider     | `green` | Persists and updates visuals                                               |
+| Room code field      | `green` | Normalizes text and persists                                               |
+| `Host`               | `green` | Hosts the current room and the UI explains what hosting means              |
+| `Join`               | `green` | Joins the current room and can be driven by a shared URL                   |
+| `Copy Link`          | `green` | Copies the share URL and confirms                                          |
+| `Paste Link / State` | `green` | Reads clipboard text and applies a room link, room code, or session JSON   |
+| `Download State`     | `green` | Downloads a versioned session JSON file                                    |
+| `Copy State`         | `green` | Copies session JSON to the clipboard                                       |
+| `Import State`       | `green` | Loads session JSON from a file                                             |
+| `Export Diagnostics` | `green` | Downloads current diagnostics JSON                                         |
+| `Disconnect`         | `green` | Ends sync while keeping local visuals running                              |
+| `Start Fresh`        | `green` | Clears local and URL state and generates a new room code                   |
+| Repo link            | `green` | Opens the repo                                                             |
+| PayPal link          | `green` | Opens PayPal                                                               |
+| Debug overlay        | `green` | Exists in the UI as a real toggle and can be carried in links and exports  |
 
 Control conclusions:
 
-1. No button is a dead stub, which is good.
-2. Several controls are still under-explained, especially around sync.
-3. The control surface is too thin for a user who needs to save, reload, or share a working setup.
+1. No production control is a stub.
+2. The app now has a complete save/share/import/reset loop.
+3. Sync actions are still the highest-cognitive-load part of the surface, but they are now explained in-product.
