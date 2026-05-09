@@ -20,13 +20,16 @@ make test
 make smoke
 ```
 
-## What Works In v0.1.0
+## What Works In v0.2.0
 
 - WebGPU WGSL shader renderer with Three.js WebGL fallback.
 - Live microphone features with Web Audio and Meyda.
 - MediaPipe pose tracking with motion fallback.
 - Low-resolution room surface sampling from the webcam feed.
 - PeerJS/WebRTC data-channel sync by room code.
+- Real-data inference engine with confidence, warnings, and recommended actions.
+- Deterministic 10-fixture regression suite for messy room/audio/sync scenarios.
+- `?debug=1` overlay for inspectable runtime reasoning.
 - GitHub Pages deployment from `main` branch `/docs`.
 - Public repo and PayPal links in the live UI.
 - Version and current public `main` commit visible in the page header.
@@ -66,6 +69,7 @@ Deployment notes: docs/deploy.md
 ```bash
 make lint
 make test
+make test-fixtures
 make smoke
 ```
 
