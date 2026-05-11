@@ -15,6 +15,8 @@ export interface AudioFeatures {
   zeroCrossingRate: number;
   beatPulse: number;
   beatCount: number;
+  bpm: number;
+  tempoConfidence: number;
 }
 
 export interface SurfaceFrame {
@@ -82,6 +84,8 @@ export const emptyAudioFeatures: AudioFeatures = {
   zeroCrossingRate: 0,
   beatPulse: 0,
   beatCount: 0,
+  bpm: 0,
+  tempoConfidence: 0,
 };
 
 export const emptySurfaceFrame: SurfaceFrame = {

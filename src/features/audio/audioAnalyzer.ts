@@ -65,6 +65,12 @@ export async function createAudioAnalyzer(
         ),
         beatPulse: detector.beatPulse,
         beatCount: detector.beatCount,
+        bpm: smooth(features.bpm, detector.bpm, 0.4),
+        tempoConfidence: smooth(
+          features.tempoConfidence,
+          detector.tempoConfidence,
+          0.3,
+        ),
       };
     },
   });

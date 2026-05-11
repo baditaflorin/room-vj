@@ -12,6 +12,10 @@ export function createDemoAudioFeatures(now: number): AudioFeatures {
     zeroCrossingRate: clamp(0.2 + Math.sin(now / 1400) * 0.15),
     beatPulse: kick > 0.82 ? 1 : clamp(kick),
     beatCount: Math.floor(now / 620),
+    // Demo loop fires a beat every ~620 ms ≈ 96.7 BPM with high confidence
+    // since the cadence is regular by construction.
+    bpm: 96.7,
+    tempoConfidence: 0.9,
   };
 }
 

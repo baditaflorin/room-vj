@@ -35,6 +35,14 @@ export function StatusPanel({ debug, status }: StatusPanelProps) {
         />
         <Metric label="Energy" value={status.audio.energy.toFixed(2)} />
         <Metric
+          label="BPM"
+          value={
+            status.audio.bpm > 0
+              ? `${status.audio.bpm.toFixed(0)} · ${Math.round(status.audio.tempoConfidence * 100)}%`
+              : "—"
+          }
+        />
+        <Metric
           label="Audio"
           value={
             status.diagnostics?.analysis.audioAssessment.classification ??
