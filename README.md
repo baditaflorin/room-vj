@@ -53,6 +53,17 @@ flowchart LR
 
 More detail: docs/architecture.md
 
+## WebRTC infrastructure
+
+Room VJ uses [PeerJS](https://peerjs.com/) for signaling (defaults to peerjs.com's free cloud). For TURN relay — needed when peers can't connect directly through STUN — the browser fetches time-limited HMAC credentials from a token server.
+
+| Repo | Role | Default endpoint |
+|---|---|---|
+| [turn-token-server](https://github.com/baditaflorin/turn-token-server) | Time-limited HMAC TURN credentials | `https://turn.0docker.com/credentials` |
+| [coturn-hetzner](https://github.com/baditaflorin/coturn-hetzner) | TURN relay for cross-NAT peers | `turn:turn.0docker.com:3479` |
+
+Override with `VITE_TURN_TOKEN_URL` at build time or `localStorage["room-vj:turnTokenUrl"]` at runtime. Set the value to an empty string to disable TURN (STUN-only). Implementation: `src/features/sync/turnConfig.ts`.
+
 ## Deployment
 
 The site is Mode A: pure GitHub Pages. Build output is committed to `docs/`.

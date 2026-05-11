@@ -1,6 +1,7 @@
 import { z } from "zod";
 import type { AudioFeatures, SyncFrame } from "../session/types";
 import { emptySyncFrame } from "../session/types";
+import { fetchIceServers } from "./turnConfig";
 
 type DataConnection = import("peerjs").DataConnection;
 type PeerInstance = import("peerjs").Peer;
@@ -124,14 +125,13 @@ export function createMeshSync(): MeshSync {
       const hostId = `room-vj-${roomCode.toLowerCase()}-host`;
       const suffix = Math.random().toString(36).slice(2, 8);
       peerId = leader ? hostId : `room-vj-${roomCode.toLowerCase()}-${suffix}`;
+      // Fetch HMAC TURN credentials so peers behind symmetric NAT
+      // (mobile carriers, corporate firewalls) have a working relay path.
+      // Falls back to STUN-only on failure — see turnConfig.ts.
+      const iceServers = await fetchIceServers();
       peer = new Peer(peerId, {
         debug: 0,
-        config: {
-          iceServers: [
-            { urls: "stun:stun.l.google.com:19302" },
-            { urls: "stun:global.stun.twilio.com:3478" },
-          ],
-        },
+        config: { iceServers },
       });
 
       await new Promise<void>((resolve, reject) => {
